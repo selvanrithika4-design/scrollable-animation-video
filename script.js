@@ -1,50 +1,56 @@
 const canvas = document.getElementById("canvas");
-const context = canvas.getContext("2d");
+const ctx = canvas.getContext("2d");
 
 const frameCount = 224;
 
-// Set canvas size
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener("resize", resizeCanvas);
+// Canvas size
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-// Generate image path
+// Image path
 const currentFrame = (index) =>
-  `images/ezgif-frame-${String(index).padStart(3, "0")}.jpg`;
-
-const images = [];
-const img = new Image();
+    `images/ezgif-frame-${String(index).padStart(3, "0")}.jpg`;
 
 // Preload images
+const images = [];
 for (let i = 1; i <= frameCount; i++) {
-  const image = new Image();
-  image.src = currentFrame(i);
-  images.push(image);
+    const img = new Image();
+    img.src = currentFrame(i);
+    images.push(img);
 }
 
 // Draw first frame
-img.src = currentFrame(1);
-img.onload = () => {
-  context.drawImage(img, 0, 0, canvas.width, canvas.height);
+images[0].onload = () => {
+    ctx.drawImage(images[0], 0, 0, canvas.width, canvas.height);
 };
 
-// Scroll animation
+// Scroll-based animation
 window.addEventListener("scroll", () => {
-  const scrollTop = window.scrollY;
-  const maxScrollTop = document.body.scrollHeight - window.innerHeight;
-  const scrollFraction = scrollTop / maxScrollTop;
+    const scrollTop = document.documentElement.scrollTop;
+    const maxScroll =
+        document.documentElement.scrollHeight - window.innerHeight;
 
-  const frameIndex = Math.min(
-    frameCount - 1,
-    Math.floor(scrollFraction * frameCount)
-  );
+    const scrollFraction = scrollTop / maxScroll;
 
-  requestAnimationFrame(() => {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.drawImage(images[frameIndex], 0, 0, canvas.width, canvas.height);
-  });
+    const frameIndex = Math.min(
+        frameCount - 1,
+        Math.floor(scrollFraction * frameCount)
+    );
+
+    requestAnimationFrame(() => {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(
+            images[frameIndex],
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+    });
 });
 
+// Resize support
+window.addEventListener("resize", () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
