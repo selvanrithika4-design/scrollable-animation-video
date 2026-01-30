@@ -13,7 +13,7 @@ window.addEventListener("resize", resizeCanvas);
 
 // Generate image path
 const currentFrame = (index) =>
-  `images/ezgif-32f2f24f18594b1f-jpg/ezgif-frame-${String(index).padStart(3, "0")}.jpg`;
+  `images/ezgif-frame-${String(index).padStart(3, "0")}.jpg`;
 
 const images = [];
 const img = new Image();
@@ -47,3 +47,4 @@ window.addEventListener("scroll", () => {
     context.drawImage(images[frameIndex], 0, 0, canvas.width, canvas.height);
   });
 });
+
